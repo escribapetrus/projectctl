@@ -9,6 +9,26 @@ import (
   _ "github.com/mattn/go-sqlite3"
 )
 
+func Test_List(t *testing.T){
+    file := "../projects.db"
+    db, err := sql.Open("sqlite3", file)
+
+    if err != nil {
+        t.Fatalf("Error opening database")
+    }
+
+    projects, err := List(db)
+    
+    if err != nil {
+        t.Fatalf("Error listing projects")
+    }
+
+    fmt.Printf("PROJECTS: %+v", projects)
+    t.Cleanup(func(){
+        db.Close()
+    })
+}
+
 func Test_FindByName(t *testing.T) {
     // success: found project in the database
     file := "../projects.db"
@@ -31,24 +51,29 @@ func Test_FindByName(t *testing.T) {
    if project != nil {
         t.Fatal("Invalid find failed")
     }
+    t.Cleanup(func(){
+        db.Close()
+    })
 }
 
 func Test_Add(t *testing.T){
     name, location := "newproject", "/path/to/project"
     file := "../projects.db"
     db, err := sql.Open("sqlite3", file)
-   
+    defer db.Close()
+
     if err != nil {
         t.Fatalf("Error opening database") 
     }
 
-    int, err := Add(name, location, db)
+    _, err = Add(name, location, db)
     
     if err != nil {
         t.Fatalf("Error inserting data")
     }
-  fmt.Printf("Inserted %d entries", int)
-
-   fmt.Printf("added project: +v", FindByName("name", db))
+    t.Cleanup(func(){
+        db.Exec("DELETE FROM projects WHERE name=?", name)
+        db.Close()
+    })
 
 }

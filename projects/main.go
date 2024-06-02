@@ -12,6 +12,20 @@ type Project struct {
     location string
 }
 
+func List(db *sql.DB) ([]Project, error) {
+    rows, error := db.Query("SELECT name, location FROM projects")
+    if error != nil { return nil, error }
+    projects := []Project{}
+
+    for rows.Next() {
+        project := Project{}
+        error := rows.Scan(&project.name, &project.location)
+        if error != nil {return nil, error}
+        projects = append(projects, project)
+    }
+    return projects, nil
+}
+
 func FindByName(name string, db *sql.DB) *Project {
     row :=  db.QueryRow(`
         SELECT name, location FROM projects
