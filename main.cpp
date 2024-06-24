@@ -1,20 +1,23 @@
 #include <iostream>
 #include <string>
 
-#include "db.h"
-#include "project.h"
+#include "db.hpp"
+#include "project.hpp"
 
 using namespace std;
 
 int main() {
-    {
-        Database db = Database("projects.db");    
-        vector<Project> projects = Project::list(db);
+  {
+    Database db = Database("projects.db");
 
-        for (auto p: projects) {
-            cout << p.toString() << endl;
-        }
+    //    Project::add("someproj", "/loc/someproj", db);
+
+    vector<Project> projects = Project::list(db);
+
+    for (auto p : projects) {
+      cout << p.toString() << endl;
     }
-   
-    return 0;
+  }
+
+  return 0;
 }

@@ -1,6 +1,6 @@
 #include <string>
 
-#include "db.h"
+#include "db.hpp"
 
 using namespace std;
 
@@ -17,6 +17,18 @@ Database::Database(const string& name) {
 
 Database::~Database() {
     if (db) sqlite3_close(db);
+}
+
+void Database::exec(const string& q) {
+    char* errMsg;
+    int rc = sqlite3_exec(db, q.c_str(), nullptr, 0, &errMsg);
+
+    if (rc != SQLITE_OK) {
+        cerr << "SQL error: " << errMsg << endl;
+        sqlite3_free(errMsg);
+    } else {
+        cout << "Operation successfull" << endl;
+    }
 }
 
 void Database::query(

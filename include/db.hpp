@@ -14,12 +14,15 @@ private:
 
 public: 
     Database(const string&);
+
     ~Database();
 
+    void exec(const string& q);
+    
     void query(
         const string&, 
         function<int(int, char**, char**)>
         );
 }; 
 
-#endif // DATABASE_H
+#endif 
