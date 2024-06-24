@@ -12,19 +12,21 @@ Project::Project(
         const string& location) :
     id(id), name(name), location(location) {}
 
-string Project::toString() const {
-    return format("ID: {}\nNAME: {}\nLOCATION: {}", id, name, location);    
-}
+    string Project::toString() const {
+        return format("ID: {}, NAME: {}, LOCATION: {}", id, name, location);    
+    }
 
-std::vector<Project> list(Database db){
-    std::vector<Project> projects;
-    std::string query = "SELECT * FROM PROJECTS;";
-    auto callback = [](void* firstArg, int argc, char** argv, char** azColName) -> int {
+vector<Project> Project::list(Database db){
+    vector<Project> projects;
+    string query = "SELECT * FROM projects;";
+    auto callback = [&](int argc, char** argv, char** azColName) -> int {
+        string id, name, location;
         for (int i = 0; i < argc; i++) {
-            // Project p;
-            // Create project with params from query and add to vector
-            //std::cout << azColName[i] << ": " << (argv[i] ? argv[i] : "NULL") << std::endl;
+            if (i == 0) id = argv[i];
+            if (i == 1) name = argv[i];
+            if (i == 2) location = argv[i];
         }
+        projects.push_back(Project(id, name, location)); 
         return 0;     
     };
     db.query(query, callback);

@@ -18,7 +18,7 @@ public:
 
     void query(
         const string&, 
-        function<int(void*, int, char**, char**)>
+        function<int(int, char**, char**)>
         );
 }; 
 

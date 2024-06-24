@@ -9,6 +9,7 @@ Database::Database(const string& name) {
     if (rc) {
         cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
         sqlite3_close(db);
+        db = nullptr;
     } else {
         cout << "Opened database successfully" << endl;
     }
@@ -20,14 +21,14 @@ Database::~Database() {
 
 void Database::query(
         const string& q, 
-        function<int(void*, int, char**, char**)> callback) {
+        function<int(int, char**, char**)> callback) {
     char* errMsg; 
     int rc = sqlite3_exec(db, q.c_str(), callbackWrapper, &callback, &errMsg);
     if (rc != SQLITE_OK) {
         cerr << "SQL error: " << errMsg << endl;
         sqlite3_free(errMsg);
     } else {
-        cout << "Operation successfull";
+        cout << "Operation successfull" << endl;
     }
 }
 

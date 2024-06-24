@@ -18,6 +18,6 @@ public:
 
     string toString() const;
 
-    vector<Project> list(Database db);
+   static vector<Project> list(Database db);
 
 };
